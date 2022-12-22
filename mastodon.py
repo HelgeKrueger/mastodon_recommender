@@ -7,7 +7,8 @@ import re
 class MastodonClient:
     def __init__(self):
         self.config = self._load_config()
-        self.instance = "mas.to"
+
+        self.instance = self.config["instance"]
         if "access_token" in self.config:
             self.access_token = self.config["access_token"]
 
@@ -16,10 +17,14 @@ class MastodonClient:
             with open("config_mastodon.yaml", "r") as f:
                 return yaml.safe_load(f)
         else:
-            self.register()
-            return self._load_config()
+            return self.register()
 
     def register(self):
+        self.instance = input("What instance do you want to use: ")
+
+        if self.instance.startswith("https://"):
+            self.instance = self.instance[8:]
+
         post_data = {
             "client_name": "Follow recommendations",
             "redirect_uris": "urn:ietf:wg:oauth:2.0:oob",
@@ -33,8 +38,16 @@ class MastodonClient:
         client_id = data["client_id"]
         client_secret = data["client_secret"]
 
+        config = {
+            "instance": self.instance,
+            "client_id": client_id,
+            "client_secret": client_secret,
+        }
+
         with open("config_mastodon.yaml", "w") as f:
-            f.write(yaml.dump({"client_id": client_id, "client_secret": client_secret}))
+            f.write(yaml.dump(config))
+
+        return config
 
     def _save_config(self):
         with open("config_mastodon.yaml", "w") as f:
