@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+peewee = "*"
+requests = "*"
+pyyaml = "*"
+rich = "*"
+
+[dev-packages]
+black = "*"
+ipython = "*"
+
+[requires]
+python_version = "3.10"
