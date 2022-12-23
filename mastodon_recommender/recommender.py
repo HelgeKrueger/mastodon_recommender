@@ -9,6 +9,8 @@ class Recommender:
         self.collection = following_collection.collection
         self.following = following_collection.following
 
+        self.acct_following = None
+
         self.lookup = {}
         self.times_followed = defaultdict(int)
 
@@ -16,6 +18,8 @@ class Recommender:
         self.minimal_count_of_common_following = 3
 
     def build_lists(self):
+        self.acct_following = [x["acct"] for x in self.following]
+
         for entry in self.collection:
             try:
                 data = json.loads(entry.data)
@@ -39,6 +43,9 @@ class Recommender:
         return sorted(suggestions, key=lambda x: x[0], reverse=True)
 
     def _should_user_be_suggested(self, user):
+        if user["acct"] in self.acct_following:
+            return False
+
         if not user["discoverable"]:
             return False
 
