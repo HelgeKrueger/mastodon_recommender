@@ -8,6 +8,7 @@ peewee = "*"
 requests = "*"
 pyyaml = "*"
 rich = "*"
+pytest = "*"
 
 [dev-packages]
 black = "*"
