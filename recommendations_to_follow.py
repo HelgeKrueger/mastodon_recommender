@@ -1,22 +1,24 @@
-import requests
 import json
 import os
 import yaml
 from collections import defaultdict
-
-from mastodon import MastodonClient
-from database import Suggestion, Following
-
-from rich import print
-from rich.table import Table
-from rich.prompt import Prompt
-
 from datetime import date, timedelta
 
 from argparse import ArgumentParser
 
+
+from rich import print
+from rich.prompt import Prompt
+
+
+from mastedon_recommender import display_table
+from mastodon import MastodonClient
+from database import Suggestion, Following
+
 parser = ArgumentParser()
 parser.add_argument("--update_own_followers", action="store_true", default=False)
+parser.add_argument("--test_run", action="store_true", default=False)
+
 args = parser.parse_args()
 
 if os.path.exists("config_mastodon.yaml"):
@@ -63,8 +65,8 @@ following = json.loads(
 following_ids = [(x["id"], x["acct"], x["following_count"]) for x in following]
 
 for acc_id, acct, following_count in following_ids:
-    print()
-    print(f"Local Account ID {acc_id} for {acct}")
+    # print()
+    # print(f"Local Account ID {acc_id} for {acct}")
 
     dd = get_following(acc_id, acct, following_count=following_count)
     try:
@@ -88,13 +90,6 @@ suggestion_list = sorted(
 )
 
 
-table = Table(title="Suggested people to follow")
-
-table.add_column("Display name")
-table.add_column("Last Status Update")
-table.add_column("url")
-table.add_column("Followed by")
-
 suggestions_left = 5
 
 
@@ -113,18 +108,21 @@ def should_display_suggestion(user):
     return True
 
 
+to_display = []
+
+
 for count, user in suggestion_list:
-    suggestion, created = Suggestion.get_or_create(account_id=user["id"])
+    if args.test_run:
+        created = True
+    else:
+        suggestion, created = Suggestion.get_or_create(account_id=user["id"])
 
     if should_display_suggestion(user):
         if created:
-            table.add_row(
-                user["display_name"], user["last_status_at"], user["url"], f"{count}"
-            )
+            to_display.append((count, user))
             suggestions_left -= 1
 
     if suggestions_left == 0:
         break
 
-print()
-print(table)
+display_table(to_display)

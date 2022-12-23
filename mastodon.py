@@ -1,6 +1,4 @@
-import yaml
 import requests
-import os
 import re
 
 from rich.progress import Progress
