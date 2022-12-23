@@ -13,7 +13,7 @@ class MastodonClient:
         self.acct = acct
         self.instance = instance
 
-    def get_following(self, account_id, acct):
+    def get_following(self, account_id, acct, following_count=None):
         following = []
 
         # print(acct)
@@ -37,10 +37,8 @@ class MastodonClient:
         urls_to_check = [f"https://{instance}/api/v1/accounts/{account_id}/following"]
         urls_checked = []
 
-        print(f"Retrieving people being followed by Account {acct}")
-
         with Progress() as progress:
-            task_id = progress.add_task(f"Fetching people {acct} follows")
+            task_id = progress.add_task("Downloading: ", total=following_count)
             while len(urls_to_check) > 0:
                 url = urls_to_check.pop()
                 urls_checked.append(url)
@@ -54,10 +52,7 @@ class MastodonClient:
                     if type(x) == dict and x["id"] not in following_ids
                 ]
 
-                progress.update(
-                    task_id,
-                    description=f"...Retrieved {len(following)} people being followed by account {acct}",
-                )
+                progress.update(task_id, completed=len(following))
 
                 if "link" in resp.headers:
                     links = resp.headers["link"].split(",")
