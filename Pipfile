@@ -6,15 +6,14 @@ name = "pypi"
 [packages]
 peewee = "*"
 requests = "*"
-pyyaml = "*"
 rich = "*"
-pytest = "*"
 
 [dev-packages]
 black = "*"
 ipython = "*"
 jupyter = "*"
 pylint = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.10"
