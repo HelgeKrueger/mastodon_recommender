@@ -34,7 +34,9 @@ class MastodonClient:
 
         # print(f"Retrieved account_id {account_id} for {acct} on {instance}")
 
-        urls_to_check = [f"https://{instance}/api/v1/accounts/{account_id}/following"]
+        urls_to_check = [
+            f"https://{instance}/api/v1/accounts/{account_id}/following?limit=80"
+        ]
         urls_checked = []
 
         with Progress(transient=True) as progress:

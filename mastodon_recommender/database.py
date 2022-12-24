@@ -7,7 +7,7 @@ db = SqliteDatabase("account_data.db")
 
 class Following(Model):
     account = CharField(unique=True)
-    created = DateField(default=date.today())
+    updated = DateField(default=date.today())
     data = TextField(default="[]")
 
     class Meta:
