@@ -46,7 +46,8 @@ class FollowingCollection:
 
         following = self.mastedon.get_following(acct, following_count=following_count)
 
-        following = self._sanitize_following(following)
+        _, instance = self.mastedon.split_acct(acct)
+        following = self._sanitize_following(following, instance)
 
         data.data = json.dumps(following)
         data.updated = date.today()
@@ -84,7 +85,10 @@ class FollowingCollection:
 
         return False
 
-    def _sanitize_following(self, following):
+    def _sanitize_following(self, following, instance):
+        return [self._sanitize_following_account(x, instance) for x in following]
+
+    def _sanitize_following_account(self, account, instance):
         keys_to_keep = [
             "acct",
             "display_name",
@@ -94,7 +98,9 @@ class FollowingCollection:
             "url",
         ]
 
-        return [
-            {key: val for key, val in x.items() if key in keys_to_keep}
-            for x in following
-        ]
+        result = {key: val for key, val in account.items() if key in keys_to_keep}
+
+        if "@" not in result["acct"]:
+            result["acct"] = f"{result['acct']}@{instance}"
+
+        return result

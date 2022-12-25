@@ -11,15 +11,21 @@ class MastodonClient:
         self.acct = acct
         self.instance = instance
 
-    def get_following(self, acct, following_count=None):
-        following = []
-
-        # print(acct)
+    def split_acct(self, acct):
         if "@" in acct:
             username, instance = acct.split("@")
         else:
             username = acct
             instance = self.instance
+
+        return username, instance
+
+    def get_following(self, acct, following_count=None):
+        following = []
+
+        # print(acct)
+
+        username, instance = self.split_acct(acct)
 
         resp = requests.get(
             f"https://{instance}/api/v1/accounts/lookup",

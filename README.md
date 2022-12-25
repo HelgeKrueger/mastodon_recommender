@@ -12,7 +12,18 @@ then you can run the script via
 recommendations_to_follow
 ```
 
-The result of the list of followers is cached in the sqlite database `account_data.db`. Basic cache invalidation is implemented.
+The output will look like
+
+```
+                                Suggested people to follow
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+┃ Display name   ┃ Last Status Update ┃ url                                 ┃ Followed by ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+│ Suggestion     │ 2022-12-25         │ https://suggestion/@suggestion      │ 20          │
+....
+```
+
+The result of the api calls is cached in the sqlite database `account_data.db`. Basic cache invalidation is implemented.
 
 ## Development
 
