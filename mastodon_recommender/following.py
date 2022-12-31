@@ -1,17 +1,21 @@
 import json
 
 from datetime import date, timedelta
+from rich.prompt import Prompt
+
 
 from .mastodon import MastodonClient
 from .database import Following
 
 
 class FollowingCollection:
-    def __init__(self, account):
+    def __init__(self, account, update_following=True):
         self.account = account
-        self.mastedon = MastodonClient(account)
+        self.mastodon = MastodonClient(account)
         self.collection = []
         self.following = []
+
+        self.update_following = update_following
 
         self.percentag_change_to_update = 10
         self.maximal_number_of_followers_to_update_often = 10000
@@ -21,6 +25,13 @@ class FollowingCollection:
         following_data = self.get_following(self.account, force_update=force)
 
         self.following = json.loads(following_data.data)
+
+        if len(self.following) == 0 and not self.mastodon.access_token:
+            print("Require Authorization")
+            self.mastodon.register()
+            print("Please open " + self.mastodon.get_authorization_url())
+            code = Prompt.ask("Please enter the authorization code: ")
+            print(self.mastodon.authorize(code))
 
         return self.following
 
@@ -44,14 +55,17 @@ class FollowingCollection:
             if not self._is_following_stale(following, data, following_count):
                 return data
 
-        following = self.mastedon.get_following(acct, following_count=following_count)
+        if self.update_following:
+            following = self.mastodon.get_following(
+                acct, following_count=following_count
+            )
 
-        _, instance = self.mastedon.split_acct(acct)
-        following = self._sanitize_following(following, instance)
+            _, instance = self.mastodon.split_acct(acct)
+            following = self._sanitize_following(following, instance)
 
-        data.data = json.dumps(following)
-        data.updated = date.today()
-        data.save()
+            data.data = json.dumps(following)
+            data.updated = date.today()
+            data.save()
 
         return data
 

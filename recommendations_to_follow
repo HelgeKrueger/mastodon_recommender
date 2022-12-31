@@ -13,12 +13,16 @@ def main():
     parser = ArgumentParser()
     parser.add_argument("--update_own_followers", action="store_true", default=False)
     parser.add_argument("--test_run", action="store_true", default=False)
+    parser.add_argument(
+        "--no_update", dest="update", action="store_false", default=True
+    )
 
     args = parser.parse_args()
 
     account = get_own_account_name()
 
-    following_collection = FollowingCollection(account)
+    following_collection = FollowingCollection(account, update_following=args.update)
+
     following_collection.fetch_for_own_account(force=args.update_own_followers)
     following_collection.fetch_for_accounts_being_followed()
 

@@ -2,6 +2,9 @@ import re
 
 import requests
 from rich.progress import Progress
+from rich import print
+
+from .database import ConfigurationVariable
 
 
 class MastodonClient:
@@ -10,6 +13,66 @@ class MastodonClient:
 
         self.acct = acct
         self.instance = instance
+
+        access_token, created = ConfigurationVariable.get_or_create(key="access_token")
+        self.access_token = access_token.value
+
+    def register(self):
+        app_name = "Mastodon Recommender"
+
+        client_id, created_id = ConfigurationVariable.get_or_create(key="client_id")
+        client_secret, created_secret = ConfigurationVariable.get_or_create(
+            key="client_secret"
+        )
+
+        if (
+            created_id
+            or created_secret
+            or not client_id.value
+            or not client_secret.value
+        ):
+            response = requests.post(
+                f"https://{self.instance}/api/v1/apps",
+                data={
+                    "client_name": app_name,
+                    "redirect_uris": "urn:ietf:wg:oauth:2.0:oob",
+                    "scopes": "read",
+                },
+            )
+
+            app_data = response.json()
+
+            client_id.value = app_data["client_id"]
+            client_secret.value = app_data["client_secret"]
+
+            client_id.save()
+            client_secret.save()
+
+        self.client_id = client_id.value
+        self.client_secret = client_secret.value
+
+    def get_authorization_url(self):
+        return f"https://{self.instance}/oauth/authorize?response_type=code&client_id={self.client_id}&redirect_uri=urn:ietf:wg:oauth:2.0:oob"
+
+    def authorize(self, code):
+        access_token, created = ConfigurationVariable.get_or_create(key="access_token")
+
+        if created or not access_token.value:
+            response = requests.post(
+                f"https://{self.instance}/oauth/token",
+                data={
+                    "grant_type": "authorization_code",
+                    "code": code,
+                    "client_id": self.client_id,
+                    "client_secret": self.client_secret,
+                    "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
+                },
+            )
+            access_token.value = response.json()["access_token"]
+            access_token.save()
+
+        self.access_token = access_token.value
+        return self.access_token
 
     def split_acct(self, acct):
         if "@" in acct:
@@ -23,6 +86,11 @@ class MastodonClient:
     def get_following(self, acct, following_count=None):
         following = []
 
+        headers = {}
+
+        if self.access_token:
+            headers["Authorization"] = f"Bearer {self.access_token}"
+
         # print(acct)
 
         username, instance = self.split_acct(acct)
@@ -31,6 +99,7 @@ class MastodonClient:
             f"https://{instance}/api/v1/accounts/lookup",
             params={"acct": username},
             timeout=60,
+            headers=headers,
         )
 
         if not resp.ok:
@@ -56,6 +125,7 @@ class MastodonClient:
                 resp = requests.get(
                     url,
                     timeout=60,
+                    headers=headers,
                 )
 
                 following_ids = [x["id"] for x in following]
