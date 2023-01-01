@@ -1,2 +1,3 @@
 config_mastodon.yaml
 account_data.db
+__pycache__
