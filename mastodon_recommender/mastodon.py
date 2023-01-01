@@ -83,6 +83,43 @@ class MastodonClient:
 
         return username, instance
 
+    def lookup_account_id(self, instance, username, headers={}):
+        resp = requests.get(
+            f"https://{instance}/api/v1/accounts/lookup",
+            params={"acct": username},
+            timeout=60,
+            headers=headers,
+        )
+
+        if not resp.ok:
+            return
+
+        return resp.json()["id"]
+
+    def descendants_for_status_id(self, instance, status_id, headers={}):
+        resp = requests.get(
+            f"https://{instance}/api/v1/statuses/{status_id}/context",
+            timeout=60,
+            headers=headers,
+        )
+
+        if not resp.ok:
+            return
+
+        return resp.json()["descendants"]
+
+    def account_statuses(self, instance, account_id, headers={}):
+        resp = requests.get(
+            f"https://{instance}/api/v1/accounts/{account_id}/statuses",
+            timeout=60,
+            headers=headers,
+        )
+
+        if not resp.ok:
+            return
+
+        return resp.json()
+
     def get_following(self, acct, following_count=None):
         following = []
 
@@ -95,17 +132,10 @@ class MastodonClient:
 
         username, instance = self.split_acct(acct)
 
-        resp = requests.get(
-            f"https://{instance}/api/v1/accounts/lookup",
-            params={"acct": username},
-            timeout=60,
-            headers=headers,
-        )
+        account_id = self.lookup_account_id(instance, username, headers=headers)
 
-        if not resp.ok:
+        if account_id is None:
             return []
-
-        account_id = resp.json()["id"]
 
         # print(f"Retrieved account_id {account_id} for {acct} on {instance}")
 
