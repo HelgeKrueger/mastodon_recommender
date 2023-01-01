@@ -110,6 +110,13 @@ class ReplyAnalyzer:
             "#ffb7ce",
             "#d6fffe",
             "#c8ffb0",
+            "#77dd77",
+            "#836953",
+            "#89cff0",
+            "#aa9499",
+            "#c1c6fc",
+            "#cfcfc4",
+            "#fdfd96",
             "#aaf0d1",
         ]
         color_lookup = {
