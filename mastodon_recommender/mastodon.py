@@ -88,12 +88,12 @@ class MastodonClient:
 
         headers = {}
 
-        if self.access_token:
-            headers["Authorization"] = f"Bearer {self.access_token}"
-
         # print(acct)
 
         username, instance = self.split_acct(acct)
+
+        if self.access_token and instance == self.instance:
+            headers["Authorization"] = f"Bearer {self.access_token}"
 
         resp = requests.get(
             f"https://{instance}/api/v1/accounts/lookup",
