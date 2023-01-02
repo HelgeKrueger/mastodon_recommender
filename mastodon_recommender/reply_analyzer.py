@@ -11,6 +11,10 @@ class ReplyAnalyzer:
         self.mc = MastodonClient("aa@bb")
         self.instances = instances
 
+        instance = self.account.split("@")[2]
+        if instance not in self.instances:
+            self.instances.append(instance)
+
         self.replies_by_instance_store = None
         self.edges = None
 
@@ -120,7 +124,8 @@ class ReplyAnalyzer:
             "#aaf0d1",
         ]
         color_lookup = {
-            value: color_pallette[idx] for idx, value in enumerate(set(labels.values()))
+            value: color_pallette[idx % len(color_pallette)]
+            for idx, value in enumerate(set(labels.values()))
         }
         G = nx.DiGraph()
 
