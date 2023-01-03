@@ -6,8 +6,8 @@ from .mastodon import MastodonClient
 
 class ReplyAnalyzer:
     def __init__(self, account, status_url, instances=[]):
-        self.account = account
-        self.status_url = status_url
+        self.account = account.strip()
+        self.status_url = status_url.strip()
         self.mc = MastodonClient("aa@bb")
         self.instances = instances
 
@@ -82,7 +82,13 @@ class ReplyAnalyzer:
     def get_relevant_status_id(self, data):
         dd = [x for x in data if x["url"] == self.status_url]
 
+        if len(dd) == 0:
+            reblogs = [x["reblog"] for x in data if x["reblog"] is not None]
+            dd = [x for x in reblogs if x["url"] == self.status_url]
+
         if len(dd) != 1:
+            print("---- Something went wrong when fetching reply from status ----")
+            print(data)
             return
 
         return dd[0]["id"]
