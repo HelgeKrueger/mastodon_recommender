@@ -1,5 +1,6 @@
 from time import time
 import networkx as nx
+from urllib.parse import urlparse
 
 from .mastodon import MastodonClient
 
@@ -14,6 +15,10 @@ class ReplyAnalyzer:
         instance = self.account.split("@")[2]
         if instance not in self.instances:
             self.instances.append(instance)
+
+        domain = urlparse(self.status_url).netloc
+        if domain not in self.instances:
+            self.instances.append(domain)
 
         self.replies_by_instance_store = None
         self.edges = None
@@ -62,7 +67,8 @@ class ReplyAnalyzer:
 
     def create_reply_graph_edges(self):
         if not self.edges:
-            instance = self.account.split("@")[2]
+            # instance = self.account.split("@")[2]
+            instance = urlparse(self.status_url).netloc
             status_id = self.status_id_on_instance(instance)
             descendants = self.mc.descendants_for_status_id(instance, status_id)
 
@@ -74,7 +80,9 @@ class ReplyAnalyzer:
             id_lookup[status_id] = self.status_url
 
             self.edges = [
-                (d[2], id_lookup[d[1]]) for d in descendant_info if d[1] in id_lookup
+                (d[2].replace(":", ""), id_lookup[d[1]].replace(":", ""))
+                for d in descendant_info
+                if d[1] in id_lookup
             ]
 
         return self.edges
@@ -85,6 +93,10 @@ class ReplyAnalyzer:
         if len(dd) == 0:
             reblogs = [x["reblog"] for x in data if x["reblog"] is not None]
             dd = [x for x in reblogs if x["url"] == self.status_url]
+
+        if len(dd) == 0:
+            print("---- Status not found ----")
+            return
 
         if len(dd) != 1:
             print("---- Something went wrong when fetching reply from status ----")
@@ -112,7 +124,8 @@ class ReplyAnalyzer:
 
     def build_conversation_visibility_graph(self):
         labels = {
-            url: "".join(ii) for url, ii in self.instance_letters_by_reply().items()
+            url.replace(":", ""): "".join(ii)
+            for url, ii in self.instance_letters_by_reply().items()
         }
         color_pallette = [
             "#ca9bf7",
@@ -135,12 +148,12 @@ class ReplyAnalyzer:
         }
         G = nx.DiGraph()
 
-        G.add_node(self.status_url)
+        G.add_node(self.status_url.replace(":", ""))
         node_sizes = [10000]
         node_colors = ["blue"]
 
         for url, ii in self.instance_letters_by_reply().items():
-            G.add_node(url, size=len(ii))
+            G.add_node(url.replace(":", ""), size=len(ii))
             node_sizes.append(len(ii) * 1000)
             node_colors.append(color_lookup["".join(ii)])
 

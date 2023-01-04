@@ -9,6 +9,7 @@ requests = "*"
 rich = "*"
 hypernetx = "*"
 networkx = "*"
+pydot = "*"
 
 [dev-packages]
 black = "*"
