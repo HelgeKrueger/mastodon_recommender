@@ -186,4 +186,11 @@ class MastodonClient:
         if not resp.ok:
             return []
 
+        if "next" in resp.links:
+            resp2 = requests.get(resp.links["next"]["url"], timeout=60)
+            if "next" in resp2.links:
+                resp3 = requests.get(resp2.links["next"]["url"], timeout=60)
+                return resp.json() + resp2.json() + resp3.json()
+            return resp.json() + resp2.json()
+
         return resp.json()
