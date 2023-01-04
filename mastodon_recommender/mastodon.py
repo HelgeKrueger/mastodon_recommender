@@ -178,3 +178,12 @@ class MastodonClient:
             )
 
         return following
+
+    def hashtag_timeline(self, instance, hashtag):
+        url = f"https://{instance}/api/v1/timelines/tag/{hashtag}?limit=40"
+        resp = requests.get(url, timeout=60)
+
+        if not resp.ok:
+            return []
+
+        return resp.json()
