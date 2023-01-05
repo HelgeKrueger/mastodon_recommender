@@ -2,13 +2,16 @@ import re
 
 import requests
 from rich.progress import Progress
-from rich import print
+from rich import print as pprint
+
+from time import time
 
 from .database import ConfigurationVariable
+from .helpers import to_iso
 
 
 class MastodonClient:
-    def __init__(self, username):
+    def __init__(self, username="a@b"):
         acct, instance = username.split("@")
 
         self.acct = acct
@@ -194,3 +197,54 @@ class MastodonClient:
             return resp.json() + resp2.json()
 
         return resp.json()
+
+    def local_hashtag_timeline(self, instance, hashtag):
+        url = f"https://{instance}/api/v1/timelines/tag/{hashtag}?local=true"
+
+        start_time = time()
+        try:
+            resp = requests.get(url, timeout=60)
+        except:
+            return []
+
+        print(
+            f"Fetched local timeline from {instance} in {time() - start_time} seconds"
+        )
+
+        if not resp.ok:
+            return []
+
+        return resp.json()
+
+    def hashtag_timeline_until(self, instance, hashtag, stopdatetime):
+        urls = [f"https://{instance}/api/v1/timelines/tag/{hashtag}?limit=40"]
+
+        result = []
+
+        start_time = time()
+
+        while len(urls) > 0:
+            url = urls.pop()
+            try:
+                resp = requests.get(url, timeout=60)
+            except:
+                return result
+
+            if not resp.ok:
+                print(
+                    f"Fetched timeline ({len(result)} elements) from {instance} in {time() - start_time} seconds"
+                )
+                return result
+
+            result += resp.json()
+
+            if "next" in resp.links:
+                dt = to_iso(result[-1]["created_at"])
+                if dt > stopdatetime:
+                    urls.append(resp.links["next"]["url"])
+
+        print(
+            f"Fetched timeline ({len(result)} elements) from {instance} in {time() - start_time} seconds"
+        )
+
+        return result

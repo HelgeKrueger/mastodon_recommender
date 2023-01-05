@@ -10,6 +10,8 @@ rich = "*"
 hypernetx = "*"
 networkx = "*"
 pydot = "*"
+seaborn = "*"
+aiohttp = "*"
 
 [dev-packages]
 black = "*"
