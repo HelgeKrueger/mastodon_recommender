@@ -12,6 +12,7 @@ networkx = "*"
 pydot = "*"
 seaborn = "*"
 aiohttp = "*"
+upsetplot = "*"
 
 [dev-packages]
 black = "*"
