@@ -2,7 +2,7 @@ import asyncio
 import aiohttp
 import json
 
-from .helpers import to_iso
+from ..helpers import to_iso
 
 
 class AsyncMastodonClient:
@@ -25,10 +25,15 @@ class AsyncMastodonClient:
         try:
             async with session.get(url=url) as response:
                 resp = await response.text()
-                return {"instance": instance, "result": json.loads(resp)}
+                result = json.loads(resp)
+                if not isinstance(result, list):
+                    result = []
+                return {"instance": instance, "result": result}
         except Exception as e:
             print("Unable to get url {} due to {}.".format(url, e.__class__))
             print(e)
+
+        return {"instance": instance, "result": []}
 
     async def hashtag_timeline_until(self, instances, hashtag, time_limit):
         async with aiohttp.ClientSession() as session:
@@ -66,4 +71,12 @@ class AsyncMastodonClient:
             print("Unable to get url {} due to {}.".format(url, e.__class__))
             print(e)
 
-        return {"instance": instance, "result": [x["url"] for x in result]}
+        try:
+            result = [x["url"] for x in result]
+        except Exception as e:
+            print(f"Fetching for instance {instance} the following error occured")
+            print(e)
+
+            result = []
+
+        return {"instance": instance, "result": result}

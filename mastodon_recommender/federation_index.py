@@ -5,7 +5,7 @@ import numpy as np
 import random
 from upsetplot import plot, from_memberships
 
-from .async_mastodon import AsyncMastodonClient
+from .clients.async_mastodon import AsyncMastodonClient
 from .helpers import to_iso
 
 
