@@ -1,0 +1,25 @@
+{
+  "name": "instance_recommender",
+  "version": "1.0.0",
+  "description": "Recommends Mastodon Instances based on math",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "esbuild index.js  --loader:.js=jsx --bundle --outdir=build --watch",
+    "build": "esbuild index.js  --loader:.js=jsx --bundle --outdir=dist --minify"
+  },
+  "author": "Helge Krueger",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.114",
+    "@mui/material": "^5.11.3",
+    "d3": "^7.8.0",
+    "esbuild": "^0.16.15",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
