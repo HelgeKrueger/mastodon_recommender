@@ -4,19 +4,26 @@ import InstanceSelector from "./src/InstanceSelector";
 
 const App = () => {
   const [data, setData] = useState();
+  const [information, setInformation] = useState();
   useEffect(() => {
     fetch("/fii-data.json")
       .then((x) => x.json())
       .then(setData);
+    fetch("/instance-information.json")
+      .then((x) => x.json())
+      .then(setInformation);
   }, []);
 
-  if (!data) {
+  if (!data || !information) {
     return <>Welcome</>;
   }
 
   return (
     <>
-      <InstanceSelector data={data}></InstanceSelector>{" "}
+      <InstanceSelector
+        data={data}
+        information={information}
+      ></InstanceSelector>{" "}
     </>
   );
 };

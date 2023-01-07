@@ -1,16 +1,12 @@
 import {
-  Box,
   Button,
   Card,
   CardContent,
-  CardHeader,
   Link,
   Paper,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 
 const Introduction = ({ onNext }) => {
   return (
@@ -32,8 +28,8 @@ const Introduction = ({ onNext }) => {
                   Your instance i.e. the people people on your instance follow
                 </li>
               </ol>
-              If you are only consuming your own timeline, 2. doesn't matter
-              much. It only influences, which replies to a post, you see.
+              If you are only consuming your own timeline, 2. doesn&apos;t
+              matter much. It only influences, which replies to a post, you see.
               <br />
               Features such as following a tag and the federated timeline very
               much depend on 2. as it is where they get their content from.
@@ -44,7 +40,7 @@ const Introduction = ({ onNext }) => {
         <Card sx={{ backgroundColor: "#F7F6CF", width: "40%", margin: 5 }}>
           <CardContent>
             <Typography variant="h6">
-              Let's do an example: #FungiFriday
+              Let&apos;s do an example: #FungiFriday
             </Typography>
             <Typography paragraph>
               One of the features of Mastodon is one can subscribe to a tag,
@@ -59,7 +55,7 @@ const Introduction = ({ onNext }) => {
               using the hashtag #FungiFriday.
             </Typography>
             <Typography paragraph>
-              Don't believe me? Check out these two links. The first has 10
+              Don&apos;t believe me? Check out these two links. The first has 10
               times more content than the second.
               <br />
               <Link href="https://ecoevo.social/tags/FungiFriday">
@@ -97,6 +93,13 @@ const Introduction = ({ onNext }) => {
         </Card>
         <Card sx={{ backgroundColor: "#EEBAB2", width: "40%", margin: 5 }}>
           <CardContent>
+            <Typography variant="h6">How do I proceed?</Typography>
+            <Typography paragraph>
+              Choose one or more hashtags in the list below. View instances in
+              the field below the hashtag list. Select different instances on
+              the left. Then explore their local timeline. If you like what you
+              see, sign up. Make sure to checkout the instance&apos;s rules.
+            </Typography>
             <Typography variant="h6">Final words</Typography>
             <Typography paragraph>
               If you have comments, you can reach me at my Fediverse handle

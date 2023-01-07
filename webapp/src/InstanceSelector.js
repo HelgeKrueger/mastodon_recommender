@@ -3,7 +3,7 @@ import HashtagChoice from "./HashtagChoice";
 import DisplayInstances from "./DisplayInstances";
 import Introduction from "./Introduction";
 
-const InstanceSelector = ({ data }) => {
+const InstanceSelector = ({ data, information }) => {
   const [chosen, setChosen] = useState([]);
   const displayRef = useRef();
   const hashtagRef = useRef();
@@ -30,7 +30,11 @@ const InstanceSelector = ({ data }) => {
         />
       </div>
       <div ref={displayRef} style={{ marginTop: "40px" }}>
-        <DisplayInstances data={data} hashtags={chosen} />
+        <DisplayInstances
+          data={data}
+          hashtags={chosen}
+          information={information}
+        />
       </div>
     </>
   );

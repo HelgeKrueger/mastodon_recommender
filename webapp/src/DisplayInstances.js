@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Link, Tab, Typography } from "@mui/material";
+import { Box, Tab, Typography } from "@mui/material";
 import React, { useState } from "react";
 import InstanceInformation from "./InstanceInformation";
 
@@ -13,7 +13,7 @@ const scoreInstance = (values, hashtags) => {
   return hashtags.reduce((acc, tag) => acc + values[tag] - sum, 0);
 };
 
-const DisplayInstances = ({ data, hashtags }) => {
+const DisplayInstances = ({ data, hashtags, information }) => {
   const [choice, setChoice] = useState("0");
   const instances = Object.keys(data);
 
@@ -47,8 +47,12 @@ const DisplayInstances = ({ data, hashtags }) => {
             ))}
           </TabList>
           {slice.map((name, idx) => (
-            <TabPanel value={"" + idx} style={{ width: "80%" }}>
-              <InstanceInformation data={data[name]} name={name} />
+            <TabPanel value={"" + idx} style={{ width: "80%" }} key={idx}>
+              <InstanceInformation
+                data={data[name]}
+                name={name}
+                information={information}
+              />
             </TabPanel>
           ))}
         </TabContext>

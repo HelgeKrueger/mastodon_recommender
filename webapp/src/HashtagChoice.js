@@ -1,18 +1,14 @@
 import {
-  Box,
   Button,
-  Container,
   Paper,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 
 const HashtagChoice = ({ hashtags, chosen, setChosen, onNext }) => {
   //   const [chosen, setChosen] = useState([]);
-
-  const itemsPerRow = 200;
 
   hashtags = hashtags.sort();
 
