@@ -1,17 +1,15 @@
 import {
   Box,
+  Button,
   Container,
+  Paper,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 
-const HashtagItem = ({ tag }) => {
-  return <ToggleButton>{tag}</ToggleButton>;
-};
-
-const HashtagChoice = ({ hashtags, chosen, setChosen }) => {
+const HashtagChoice = ({ hashtags, chosen, setChosen, onNext }) => {
   //   const [chosen, setChosen] = useState([]);
 
   const itemsPerRow = 200;
@@ -23,22 +21,38 @@ const HashtagChoice = ({ hashtags, chosen, setChosen }) => {
   };
 
   return (
-    <Box sx={{ backgroundColor: "white" }}>
-      <Typography variant="h4">Choose Hashtags you like</Typography>
+    <Paper elevation={5} sx={{ backgroundColor: "white", padding: 2 }}>
+      <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
+        Choose Hashtags you like
+      </Typography>
 
       <ToggleButtonGroup
         color="primary"
         value={chosen}
         onChange={handleChange}
         sx={{ display: "block" }}
+        size="small"
       >
         {hashtags.map((tag) => (
-          <ToggleButton key={tag} value={tag}>
+          <ToggleButton
+            key={tag}
+            value={tag}
+            sx={{ width: "250px", margin: 1, padding: 0 }}
+            size="small"
+          >
             {tag}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
-    </Box>
+      <Button
+        variant="contained"
+        onClick={onNext}
+        disabled={!chosen.length}
+        fullWidth
+      >
+        Next
+      </Button>
+    </Paper>
   );
 };
 

@@ -27,12 +27,14 @@ const DisplayInstances = ({ data, hashtags }) => {
     return <></>;
   }
 
-  const slice = sorted.slice(0, 10);
+  const slice = sorted.slice(0, 20);
 
   return (
     <Box sx={{ backgroundColor: "white" }}>
-      <Typography variant="h4">Recommended Instances</Typography>
-      <Box sx={{ display: "flex" }}>
+      <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
+        Recommended Instances
+      </Typography>
+      <Box sx={{ display: "flex", width: "100%" }}>
         <TabContext value={choice}>
           <TabList
             orientation="vertical"
@@ -45,7 +47,7 @@ const DisplayInstances = ({ data, hashtags }) => {
             ))}
           </TabList>
           {slice.map((name, idx) => (
-            <TabPanel value={"" + idx}>
+            <TabPanel value={"" + idx} style={{ width: "80%" }}>
               <InstanceInformation data={data[name]} name={name} />
             </TabPanel>
           ))}
