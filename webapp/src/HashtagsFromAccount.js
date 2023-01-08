@@ -1,12 +1,32 @@
 import { Button, Container, Paper, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const HashtagsFromAccount = ({ hashtags, setChosen, onNext }) => {
   const [account, setAccount] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [tmp, setTmp] = useState(0);
+
+  useEffect(() => {
+    const loc = window.location.toString();
+    const idx = loc.search("#");
+    if (idx > -1) {
+      setAccount(loc.substring(idx + 1));
+      setTmp(1);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (tmp !== 0) {
+      fetchAccount();
+    }
+  }, [tmp]);
 
   const fetchAccount = () => {
-    const domain = account.split("@")[1];
+    let aaa = account.trim();
+    if (aaa[0] === "@") {
+      aaa = aaa.substring(1);
+    }
+    const domain = aaa.split("@")[1];
     setDisabled(true);
     fetch(`https://${domain}/api/v2/search?q=${account}`)
       .then((x) => x.json())
@@ -17,14 +37,30 @@ const HashtagsFromAccount = ({ hashtags, setChosen, onNext }) => {
         fetch(`https://${domain}/api/v1/accounts/${acct_id}/statuses?limit=40`)
           .then((x) => x.json())
           .then((statuses) => {
-            const tags = statuses.map((x) => x?.tags);
+            const tags = statuses.map((x) => {
+              const tags = x?.tags;
+              if (tags.length === 0) {
+                if (x?.reblog) {
+                  return x?.reblog?.tags;
+                }
+              }
+              return tags;
+            });
             const tagNames = tags
               .reduce((a, b) => a.concat(b))
               .map((x) => x.name.toLowerCase());
 
-            setChosen(tagNames.filter((tag) => hashtags.indexOf(tag) > -1));
+            const newTags = tagNames.filter(
+              (tag) => hashtags.indexOf(tag) > -1
+            );
+
+            setChosen(newTags);
             setDisabled(false);
-            // onNext();
+            if (newTags.length > 0) {
+              setTimeout(() => {
+                onNext();
+              }, 400);
+            }
           });
       });
   };
