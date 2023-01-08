@@ -6,6 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import HashtagsFromAccount from "./HashtagsFromAccount";
 
 const HashtagChoice = ({ hashtags, chosen, setChosen, onNext }) => {
   //   const [chosen, setChosen] = useState([]);
@@ -18,10 +19,14 @@ const HashtagChoice = ({ hashtags, chosen, setChosen, onNext }) => {
 
   return (
     <Paper elevation={5} sx={{ backgroundColor: "white", padding: 2 }}>
+      <HashtagsFromAccount
+        hashtags={hashtags}
+        setChosen={setChosen}
+        onNext={onNext}
+      />
       <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
         Choose Hashtags you like
       </Typography>
-
       <ToggleButtonGroup
         color="primary"
         value={chosen}
