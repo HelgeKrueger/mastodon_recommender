@@ -20,8 +20,10 @@ class AsyncMastodonClient:
 
         return result
 
-    async def local_hashtag_timeline_for_instance(self, session, instance, hashtag):
-        url = f"https://{instance}/api/v1/timelines/tag/{hashtag}?limit=40"
+    async def local_hashtag_timeline_for_instance(
+        self, session, instance, hashtag, limit=20
+    ):
+        url = f"https://{instance}/api/v1/timelines/tag/{hashtag}?limit={limit}"
         try:
             async with session.get(url=url) as response:
                 resp = await response.text()

@@ -9,11 +9,7 @@ setup(
     author_email="helge.krueger@gmail.com",
     license="MIT",
     packages=["mastodon_recommender"],
-    install_requires=[
-        "peewee",
-        "requests",
-        "rich",
-    ],
+    install_requires=["peewee", "requests", "rich", "aiohttp"],
     scripts=["recommendations_to_follow"],
     zip_safe=False,
 )
