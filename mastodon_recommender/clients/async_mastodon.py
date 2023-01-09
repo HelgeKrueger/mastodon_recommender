@@ -80,3 +80,30 @@ class AsyncMastodonClient:
             result = []
 
         return {"instance": instance, "result": result}
+
+    async def hashtag_trends(self, instances):
+        async with aiohttp.ClientSession() as session:
+            result = await asyncio.gather(
+                *[
+                    self.hashtag_trends_for_instance(session, instance)
+                    for instance in instances
+                ]
+            )
+
+        return result
+
+    async def hashtag_trends_for_instance(self, session, instance):
+        url = f"https://{instance}/api/v1/trends/tags?limit=20"
+
+        try:
+            async with session.get(url=url) as response:
+                resp = await response.text()
+                result = json.loads(resp)
+                if not isinstance(result, list):
+                    result = []
+                return {"instance": instance, "result": result}
+        except Exception as e:
+            print("Unable to get url {} due to {}.".format(url, e.__class__))
+            print(e)
+
+        return {"instance": instance, "result": []}

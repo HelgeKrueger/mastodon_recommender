@@ -216,3 +216,11 @@ class FederationIndex:
         to_plot2 = from_memberships(to_plot)
 
         return plot(to_plot2, subset_size="count")
+
+    async def hashtag_trends(self):
+        result = await self.client.hashtag_trends(self.instances)
+
+        hashtag_list = sum((value["result"] for value in result), [])
+        hashtag_list = [x.lower() for x in hashtag_list]
+
+        return list(set(hashtag_list))

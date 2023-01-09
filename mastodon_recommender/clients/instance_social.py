@@ -6,11 +6,16 @@ from ..database import ConfigurationVariable
 class InstanceSocialClient:
     def __init__(self, access_token=None):
         access_token_item, created = ConfigurationVariable.get_or_create(
-            key="access_token"
+            key="instance_social_access_token"
         )
 
         if access_token:
             access_token_item.value = access_token
+            access_token_item.save()
+
+        if access_token_item.value is None:
+            token = input("Please enter your https://instances.social/ API token: ")
+            access_token_item.value = token
             access_token_item.save()
 
         self.access_token = access_token_item.value
@@ -28,5 +33,7 @@ class InstanceSocialClient:
 
         data = response.json()
         return [
-            {"name": x["name"], "users": x["active_users"]} for x in data["instances"]
+            {"name": x["name"], "users": x["active_users"]}
+            for x in data["instances"]
+            if x["up"]
         ]

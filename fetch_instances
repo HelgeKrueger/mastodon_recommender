@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+
+import json
+
+from mastodon_recommender.clients.instance_social import InstanceSocialClient
+
+
+isc = InstanceSocialClient()
+result = isc.fetch()
+
+with open("mastodon-instances.json", "w") as f:
+    json.dump(result, f)
