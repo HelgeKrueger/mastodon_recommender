@@ -1,19 +1,7 @@
 import { Alert, Divider, Grid, Link } from "@mui/material";
 import React from "react";
 import Chart from "./Chart";
-
-const Registration = ({ data }) => {
-  console.log(data);
-
-  if (!data?.enabled) {
-    return <Alert severity="error">Registration not possible</Alert>;
-  }
-  if (data?.approval_required) {
-    return <Alert severity="warning">Registration requires approval</Alert>;
-  }
-
-  return <></>;
-};
+import Registration from "./instances/Registration";
 
 const InstanceInformation = ({ name, data, information }) => {
   const info = information?.[name];

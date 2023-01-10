@@ -18,14 +18,7 @@ const App = () => {
     return <>Welcome</>;
   }
 
-  return (
-    <>
-      <InstanceSelector
-        data={data}
-        information={information}
-      ></InstanceSelector>{" "}
-    </>
-  );
+  return <InstanceSelector data={data} information={information} />;
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

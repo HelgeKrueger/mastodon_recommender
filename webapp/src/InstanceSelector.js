@@ -1,9 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import HashtagChoice from "./HashtagChoice";
 import DisplayInstances from "./DisplayInstances";
 import Introduction from "./Introduction";
+import { Box, Container, Paper, Typography } from "@mui/material";
+import TopicChoice from "./TopicChoice";
+import DisplayInstancesForTopic from "./DisplayInstancesForTopic";
+
+const topicsReducer = (state, action) => {
+  const [topic, value] = action;
+
+  state[topic] = value;
+
+  return { ...state };
+};
 
 const InstanceSelector = ({ data, information }) => {
+  const [topics, topicsDispatch] = useReducer(topicsReducer, {});
+
   const [chosen, setChosen] = useState([]);
   const displayRef = useRef();
   const hashtagRef = useRef();
@@ -17,6 +30,31 @@ const InstanceSelector = ({ data, information }) => {
   const gotoHashtag = () => {
     hashtagRef.current.scrollIntoView();
   };
+  return (
+    <>
+      <Paper
+        sx={{
+          width: "80%",
+          backgroundColor: "white",
+          margin: 2,
+          padding: 2,
+          textAlign: "center",
+        }}
+        elevation={4}
+      >
+        <Typography variant="h2">Instance Recommender</Typography>
+        Alpha version; For information contact @helgek@mas.to.
+      </Paper>
+      <Box sx={{ display: "flex", padding: 3 }}>
+        <TopicChoice topics={topics} dispatch={topicsDispatch} />
+        <DisplayInstancesForTopic
+          information={information}
+          data={data}
+          topics={topics}
+        />
+      </Box>
+    </>
+  );
 
   return (
     <>
