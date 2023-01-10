@@ -13,8 +13,12 @@ const TopicChoice = ({ topics, dispatch }) => {
     ["spanish", "Español"],
     ["french", "Français"],
     ["science", "Science"],
+    ["photos", "Photos"],
+    ["tech", "Technology"],
     // ["eupolitics", "EU Politics"],
     // ["world", "World"],
+    // ["ussports", "US Sports"],
+    ["uspolitics", "US Politics"],
   ];
 
   return (
@@ -34,24 +38,6 @@ const TopicChoice = ({ topics, dispatch }) => {
           />
         ))}
 
-        <FormControlLabel
-          control={
-            <Checkbox
-              value={topics["ussports"]}
-              onChange={(e) => dispatch(["ussports", e.target.checked])}
-            />
-          }
-          label="US Sports"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              value={topics["uspolitics"]}
-              onChange={(e) => dispatch(["uspolitics", e.target.checked])}
-            />
-          }
-          label="US Politics"
-        />
         <Typography variant="h6">Meta</Typography>
         <FormControlLabel
           control={

@@ -55,9 +55,19 @@ const InstancesForTopic = ({ data, topics, information }) => {
   if (topics.indexOf("spanish") > -1) {
     hashtags = hashtags.concat(["felizlunes"]);
   }
-
+  if (topics.indexOf("tech") > -1) {
+    hashtags = hashtags.concat(["lenovo", "linux", "javascript"]);
+  }
   if (topics.indexOf("french") > -1) {
     hashtags = hashtags.concat(["vendredilecture"]);
+  }
+
+  if (topics.indexOf("photos") > -1) {
+    hashtags = hashtags.concat([
+      "dogsofmastodon",
+      "standingstonesunday",
+      "flowerphotography",
+    ]);
   }
 
   let sorted = instances;
