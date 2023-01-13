@@ -9,13 +9,17 @@ const toHash = (word) => {
 };
 
 const Chart = ({ data }) => {
+  if (!data || Object.keys(data).length === 0) {
+    return <></>;
+  }
+
   const values = Object.values(data);
   const mean = (1 / values.length) * values.reduce((a, b) => a + b);
 
   const margin = { top: 50, bottom: 50, right: 50, left: 50 };
 
   const width = 800;
-  const height = 1600;
+  const height = 600;
 
   const plotWidth = width - margin.right - margin.left;
   const plotHeight = height - margin.top - margin.bottom;
@@ -31,7 +35,7 @@ const Chart = ({ data }) => {
     });
     rows.sort((a, b) => b["value"] - a["value"]);
 
-    const maxValue = 0.4;
+    const maxValue = 40;
 
     rows = rows.map((x) => {
       x["value"] = Math.max(-maxValue, x["value"]);
@@ -93,7 +97,7 @@ const Chart = ({ data }) => {
 
       .attr("text-anchor", (entry) => (x(entry.value) > x(0) ? "end" : "start"))
       .attr("stroke", "black")
-      .text((entry) => `#${entry.tag}  `);
+      .text((entry) => `${entry.tag}  `);
   };
 
   useEffect(() => {
@@ -102,6 +106,8 @@ const Chart = ({ data }) => {
       renderer(svg);
     }
   }, [data, renderer, svgElementRef]);
+
+  console.log(data);
 
   return (
     <svg

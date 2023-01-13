@@ -8,11 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import Chart from "../Chart";
 import Registration from "./Registration";
 
-const SingleInstance = ({ name, info, includeLinks }) => {
+const SingleInstance = ({ name, info, includeLinks, data }) => {
   let furtherInformation = "";
-  if (includeLinks) {
+  if (false) {
     furtherInformation = (
       <CardActions sx={{ backgroundColor: "lightgray" }}>
         <Link href={`https://${name}/about`} target="_blank">
@@ -30,17 +31,17 @@ const SingleInstance = ({ name, info, includeLinks }) => {
     );
   }
   return (
-    <Card elevation={2} sx={{ margin: 2, padding: 1, backgroundColor: "#ffd" }}>
-      <CardContent>
-        <Link href={`https://${name}/`} target="_blank">
-          <Typography variant="h6">{name}</Typography>
-        </Link>
-        <br />
-        {info?.description}
-        <Registration data={info?.registration} />
-      </CardContent>
+    <>
+      <Link href={`https://${name}/`} target="_blank">
+        <Typography variant="h6">{name}</Typography>
+      </Link>
+      <br />
+      {info?.description}
+      <Registration data={info?.registration} />
+      <br />
       {furtherInformation}
-    </Card>
+      <Chart data={data} />
+    </>
   );
 };
 

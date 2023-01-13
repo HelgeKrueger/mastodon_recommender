@@ -1,5 +1,14 @@
-import { Paper, Typography } from "@mui/material";
-import React from "react";
+import {
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import SingleInstance from "./SingleInstance";
 
 const scoreInstance = (values, hashtags) => {
@@ -9,90 +18,113 @@ const scoreInstance = (values, hashtags) => {
   if (sum === 0) {
     return -10000;
   }
-  return hashtags.reduce((acc, tag) => acc + values[tag] - sum, 0);
+  return hashtags.reduce((acc, tag) => acc + values[tag] - sum, 0) + sum / 10;
 };
 
-const InstancesForTopic = ({ data, topics, information }) => {
-  let hashtags = [];
+const InstancesForTopic = ({ data, topics, information, topicData }) => {
+  const [displayed, setDisplayed] = useState();
+  const [dataToDisplay, setDataToDisplay] = useState({});
   const instances = Object.keys(data);
-
-  if (topics.length === 0) {
-    return <></>;
-  }
-
-  if (topics.indexOf("deutsch") > -1) {
-    hashtags.push("verkehrswende");
-    hashtags.push("csu");
-    hashtags.push("mobilitatsgipfel");
-  }
-
-  if (topics.indexOf("ussports") > -1) {
-    hashtags = hashtags.concat([
-      "baseball",
-      "seahawks",
-      "nflplayoffs",
-      "packers",
-    ]);
-  }
-  if (topics.indexOf("uspolitics") > -1) {
-    hashtags = hashtags.concat(["scotus", "jan6"]);
-  }
-  if (topics.indexOf("science") > -1) {
-    hashtags = hashtags.concat([
-      "openscience",
-      "sciencemastodon",
-      "genomics",
-      "academic",
-    ]);
-  }
-  if (topics.indexOf("eupolitics") > -1) {
-    hashtags = hashtags.concat(["tory", "brexit", "euco", "standwithukraine"]);
-  }
-  if (topics.indexOf("world") > -1) {
-    hashtags = hashtags.concat(["brasil", "france", "indonesia", "pakistan"]);
-  }
-
-  if (topics.indexOf("spanish") > -1) {
-    hashtags = hashtags.concat(["felizlunes"]);
-  }
-  if (topics.indexOf("tech") > -1) {
-    hashtags = hashtags.concat(["lenovo", "linux", "javascript"]);
-  }
-  if (topics.indexOf("french") > -1) {
-    hashtags = hashtags.concat(["vendredilecture"]);
-  }
-
-  if (topics.indexOf("photos") > -1) {
-    hashtags = hashtags.concat([
-      "dogsofmastodon",
-      "standingstonesunday",
-      "flowerphotography",
-    ]);
-  }
 
   let sorted = instances;
   sorted.sort(
-    (a, b) =>
-      scoreInstance(data[b], hashtags) - scoreInstance(data[a], hashtags)
+    (a, b) => scoreInstance(data[b], topics) - scoreInstance(data[a], topics)
   );
 
-  sorted = sorted.slice(0, 10);
+  sorted = sorted.slice(0, 20);
+
+  useEffect(() => {
+    setDisplayed(sorted[0]);
+  }, [topics]);
+
+  useEffect(() => {
+    let toDisplay = {};
+    const baseData = data[displayed];
+
+    for (let entry of topicData) {
+      if (entry.entries.some((x) => topics.indexOf(x.hashtag) > -1)) {
+        for (let item of entry.entries) {
+          toDisplay["#" + item.hashtag] = baseData[item.hashtag];
+        }
+      } else {
+        toDisplay[entry.name] =
+          entry.entries
+            .map((x) => baseData?.[x.hashtag])
+            .reduce((acc, x) => acc + x, 0) / entry.entries.length;
+      }
+    }
+
+    setDataToDisplay(toDisplay);
+  }, [displayed]);
 
   return (
-    <Paper elevation={5} sx={{ padding: 2, margin: 2, width: "60%" }}>
-      <Typography variant="h5">Topic: {topics.join(", ")}</Typography>
-      <Typography>
-        Selection based on hashtags: {hashtags.join(", ")}
-      </Typography>
-      {sorted.map((instance) => (
-        <SingleInstance
-          name={instance}
-          info={information?.[instance]}
-          key={instance}
-          includeLinks
-        />
-      ))}
-    </Paper>
+    <Grid container>
+      <Grid item xs={3}>
+        <Paper elevation={5} sx={{ padding: 1, margin: 1 }}>
+          <Table size="small">
+            <TableHead>
+              <TableRow sx={{ height: "150px" }}>
+                <TableCell>Name</TableCell>
+                {/* {topics.map((name) => (
+                  <TableCell
+                    sx={{
+                      // transformOrigin: "60px 100px",
+                      // transform: "rotate(-90deg)",
+                      width: "30px",
+                    }}
+                    key={name}
+                  >
+                    <div
+                      style={{
+                        transformOrigin: "20px 30px",
+                        transform: "rotate(-90deg)",
+                        width: "30px",
+                      }}
+                    >
+                      {name}
+                    </div>
+                  </TableCell>
+                ))} */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {sorted.map((instance) => (
+                <TableRow
+                  key={instance}
+                  onClick={() => {
+                    setDisplayed(instance);
+                  }}
+                  sx={{
+                    backgroundColor:
+                      displayed === instance ? "lightblue" : "white",
+                  }}
+                >
+                  <TableCell>{instance}</TableCell>
+                  {/* {topics.map((name) => {
+                    return (
+                      <TableCell key={name}>
+                        {Number(data[instance][name]).toFixed(0)}
+                      </TableCell>
+                    );
+                  })} */}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
+      </Grid>
+      <Grid item xs={9}>
+        <Paper elevation={3} sx={{ padding: 1, margin: 1 }}>
+          <SingleInstance
+            name={displayed}
+            info={information?.[displayed]}
+            key={displayed}
+            data={dataToDisplay}
+            includeLinks
+          />
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -2,14 +2,23 @@ import React, { useEffect, useReducer, useRef, useState } from "react";
 import HashtagChoice from "./HashtagChoice";
 import DisplayInstances from "./DisplayInstances";
 import Introduction from "./Introduction";
-import { Box, Container, Paper, Typography } from "@mui/material";
+import { Box, Container, Grid, Paper, Typography } from "@mui/material";
 import TopicChoice from "./TopicChoice";
 import DisplayInstancesForTopic from "./DisplayInstancesForTopic";
+import InstancesForTopic from "./instances/InstancesForTopic";
 
 const topicsReducer = (state, action) => {
-  const [topic, value] = action;
+  if (action.action === "setvalue") {
+    state[action.hashtag] = action.selected;
+  }
 
-  state[topic] = value;
+  if (action.action === "setTopic") {
+    for (let value of action.values) {
+      state[value] = action.selected;
+      console.log(value);
+    }
+    console.log(state);
+  }
 
   return { ...state };
 };
@@ -17,63 +26,154 @@ const topicsReducer = (state, action) => {
 const InstanceSelector = ({ data, information }) => {
   const [topics, topicsDispatch] = useReducer(topicsReducer, {});
 
-  const [chosen, setChosen] = useState([]);
-  const displayRef = useRef();
-  const hashtagRef = useRef();
+  const topicData = [
+    {
+      name: "art",
+      entries: [
+        { hashtag: "birds" },
+        { hashtag: "moon" },
+        { hashtag: "poetry" },
+        { hashtag: "photography" },
+        { hashtag: "mastoart" },
+      ],
+    },
+    {
+      name: "climate",
+      entries: [{ hashtag: "cop28" }, { hashtag: "climatechange" }],
+    },
+    {
+      name: "community",
+      entries: [
+        { hashtag: "blackmastodon" },
+        { hashtag: "furry" },
+        { hashtag: "lgbtq" },
+        { hashtag: "queer" },
+        { hashtag: "latinx" },
+      ],
+    },
+    {
+      name: "food",
+      entries: [
+        { hashtag: "cooking" },
+        { hashtag: "vegetarian" },
+        { hashtag: "beer" },
+        { hashtag: "wine" },
+        { hashtag: "vegan" },
+      ],
+    },
+    {
+      name: "games",
+      entries: [
+        { hashtag: "wordle" },
+        { hashtag: "hashtaggames" },
+        { hashtag: "videogames" },
+        { hashtag: "retrogames" },
+      ],
+    },
+    {
+      name: "german",
+      entries: [
+        { hashtag: "autobahn" },
+        { hashtag: "cdu" },
+        { hashtag: "deutschpflicht" },
+      ],
+    },
+    {
+      name: "french",
+      entries: [{ hashtag: "retraites" }, { hashtag: "vendredilecture" }],
+    },
+    { name: "spanish", entries: [{ hashtag: "musica" }] },
+    {
+      name: "us politics",
+      entries: [
+        { hashtag: "biden" },
+        { hashtag: "mccarthy" },
+        { hashtag: "trump" },
+      ],
+    },
+    {
+      name: "software",
+      entries: [
+        { hashtag: "javascript" },
+        { hashtag: "css" },
+        { hashtag: "python" },
+        { hashtag: "rust" },
+        { hashtag: "ml" },
+        { hashtag: "accessibility" },
+      ],
+    },
+    {
+      name: "science",
+      entries: [
+        { hashtag: "physics" },
+        { hashtag: "history" },
+        { hashtag: "climatechange" },
+        { hashtag: "openaccess" },
+        { hashtag: "dataviz" },
+      ],
+    },
+    {
+      name: "sport",
+      entries: [
+        { hashtag: "arsenal" },
+        { hashtag: "football" },
+        { hashtag: "baseball" },
+        { hashtag: "nfl" },
+      ],
+    },
+    {
+      name: "other",
+      entries: [{ hashtag: "hashtaggames" }, { hashtag: "ttrpg" }],
+    },
+    {
+      name: "questionable",
+      notcheckable: true,
+      entries: [
+        { hashtag: "nsfw" },
+        { hashtag: "nude" },
+        { hashtag: "twitter" },
+      ],
+    },
+  ];
 
-  const hashtags = Object.keys(data["mas.to"]);
-
-  const onNext = () => {
-    displayRef.current.scrollIntoView();
-  };
-
-  const gotoHashtag = () => {
-    hashtagRef.current.scrollIntoView();
-  };
   return (
     <>
-      <Paper
-        sx={{
-          width: "80%",
-          backgroundColor: "white",
-          margin: 2,
-          padding: 2,
-          textAlign: "center",
-        }}
-        elevation={4}
-      >
-        <Typography variant="h2">Instance Recommender</Typography>
-        Alpha version; For information contact @helgek@mas.to.
-      </Paper>
-      <Box sx={{ display: "flex", padding: 3 }}>
-        <TopicChoice topics={topics} dispatch={topicsDispatch} />
-        <DisplayInstancesForTopic
-          information={information}
-          data={data}
-          topics={topics}
-        />
-      </Box>
-    </>
-  );
-
-  return (
-    <>
-      <Introduction onNext={gotoHashtag} />
-      <div ref={hashtagRef} style={{ marginTop: "40px" }}>
-        <HashtagChoice
-          hashtags={hashtags}
-          chosen={chosen}
-          setChosen={setChosen}
-          onNext={onNext}
-        />
-      </div>
-      <div ref={displayRef} style={{ marginTop: "40px" }}>
-        <DisplayInstances
-          data={data}
-          hashtags={chosen}
-          information={information}
-        />
-      </div>
+      <Grid container>
+        <Grid item xs={3}>
+          <TopicChoice
+            selected={topics}
+            dispatch={topicsDispatch}
+            topicData={topicData}
+          />
+        </Grid>
+        <Grid item xs={9}>
+          <Paper
+            sx={{
+              backgroundColor: "white",
+              margin: 1,
+              padding: 1,
+              textAlign: "center",
+              width: "97%",
+            }}
+            elevation={4}
+          >
+            <Grid container>
+              <Grid item xs={9} sx={{ textAlign: "center" }}>
+                <Typography variant="h2">Instance Recommender</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                For information contact: @helgek@mas.to.
+              </Grid>
+            </Grid>
+          </Paper>
+          <InstancesForTopic
+            topics={Object.keys(topics).filter((t) => topics[t])}
+            data={data}
+            information={information}
+            topicData={topicData}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 };
