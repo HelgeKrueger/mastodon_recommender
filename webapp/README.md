@@ -1,5 +1,7 @@
 # Instance Recommender Web GUI
 
+The current version is available at https://instance-recommender.onrender.com/
+
 ## Data files
 
 The files `dist/fii-data.json` and `dist/instance-information.json` contain the data of this project.
