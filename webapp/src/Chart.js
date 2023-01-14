@@ -13,6 +13,8 @@ const Chart = ({ data }) => {
     return <></>;
   }
 
+  console.log(data);
+
   const values = Object.values(data);
   const mean = (1 / values.length) * values.reduce((a, b) => a + b);
 
@@ -106,8 +108,6 @@ const Chart = ({ data }) => {
       renderer(svg);
     }
   }, [data, renderer, svgElementRef]);
-
-  console.log(data);
 
   return (
     <svg

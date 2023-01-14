@@ -1,7 +1,5 @@
-import { Info } from "@mui/icons-material";
 import {
   Checkbox,
-  IconButton,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -17,7 +15,7 @@ const HashtagEntry = ({ entry, selected, dispatch }) => {
       onClick={(e) => {
         dispatch({
           action: "setvalue",
-          hashtag: entry.hashtag,
+          hashtag: entry.name,
           selected: !selected,
         });
       }}
@@ -31,7 +29,7 @@ const HashtagEntry = ({ entry, selected, dispatch }) => {
             sx={{ padding: 0 }}
           />
         </ListItemIcon>
-        <ListItemText primary={"#" + entry.hashtag} />
+        <ListItemText primary={"#" + entry.name} />
       </ListItemButton>
     </ListItem>
   );

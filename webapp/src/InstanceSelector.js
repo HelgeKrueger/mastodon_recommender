@@ -1,11 +1,10 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import HashtagChoice from "./HashtagChoice";
-import DisplayInstances from "./DisplayInstances";
-import Introduction from "./Introduction";
-import { Box, Container, Grid, Paper, Typography } from "@mui/material";
+
+import { Grid, Paper, Typography } from "@mui/material";
 import TopicChoice from "./TopicChoice";
-import DisplayInstancesForTopic from "./DisplayInstancesForTopic";
 import InstancesForTopic from "./instances/InstancesForTopic";
+import { Language, Report } from "@mui/icons-material";
 
 const topicsReducer = (state, action) => {
   if (action.action === "setvalue") {
@@ -28,111 +27,145 @@ const InstanceSelector = ({ data, information }) => {
 
   const topicData = [
     {
-      name: "art",
+      type: "group",
+      name: "other languages",
+      icon: <Language />,
       entries: [
-        { hashtag: "birds" },
-        { hashtag: "moon" },
-        { hashtag: "poetry" },
-        { hashtag: "photography" },
-        { hashtag: "mastoart" },
+        {
+          name: "german",
+          entries: [
+            { type: "hashtag", name: "autobahn" },
+            { type: "hashtag", name: "cdu" },
+            { type: "hashtag", name: "deutschpflicht" },
+          ],
+          type: "topic",
+        },
+        {
+          name: "french",
+          entries: [
+            { type: "hashtag", name: "retraites" },
+            { type: "hashtag", name: "vendredilecture" },
+          ],
+          type: "topic",
+        },
+        {
+          name: "spanish",
+          entries: [{ type: "hashtag", name: "musica" }],
+          type: "topic",
+        },
       ],
     },
     {
+      name: "art",
+      entries: [
+        { type: "hashtag", name: "birds" },
+        { type: "hashtag", name: "moon" },
+        { type: "hashtag", name: "poetry" },
+        { type: "hashtag", name: "photography" },
+        { type: "hashtag", name: "mastoart" },
+      ],
+      type: "topic",
+    },
+    {
       name: "climate",
-      entries: [{ hashtag: "cop28" }, { hashtag: "climatechange" }],
+      entries: [
+        { type: "hashtag", name: "cop28" },
+        { type: "hashtag", name: "climatechange" },
+      ],
+      type: "topic",
     },
     {
       name: "community",
       entries: [
-        { hashtag: "blackmastodon" },
-        { hashtag: "furry" },
-        { hashtag: "lgbtq" },
-        { hashtag: "queer" },
-        { hashtag: "latinx" },
+        { type: "hashtag", name: "blackmastodon" },
+        { type: "hashtag", name: "furry" },
+        { type: "hashtag", name: "lgbtq" },
+        { type: "hashtag", name: "queer" },
+        { type: "hashtag", name: "latinx" },
       ],
+      type: "topic",
     },
     {
       name: "food",
       entries: [
-        { hashtag: "cooking" },
-        { hashtag: "vegetarian" },
-        { hashtag: "beer" },
-        { hashtag: "wine" },
-        { hashtag: "vegan" },
+        { type: "hashtag", name: "cooking" },
+        { type: "hashtag", name: "vegetarian" },
+        { type: "hashtag", name: "beer" },
+        { type: "hashtag", name: "wine" },
+        { type: "hashtag", name: "vegan" },
       ],
+      type: "topic",
     },
     {
       name: "games",
       entries: [
-        { hashtag: "wordle" },
-        { hashtag: "hashtaggames" },
-        { hashtag: "videogames" },
-        { hashtag: "retrogames" },
+        { type: "hashtag", name: "wordle" },
+        { type: "hashtag", name: "hashtaggames" },
+        { type: "hashtag", name: "videogames" },
+        { type: "hashtag", name: "retrogames" },
       ],
+      type: "topic",
     },
-    {
-      name: "german",
-      entries: [
-        { hashtag: "autobahn" },
-        { hashtag: "cdu" },
-        { hashtag: "deutschpflicht" },
-      ],
-    },
-    {
-      name: "french",
-      entries: [{ hashtag: "retraites" }, { hashtag: "vendredilecture" }],
-    },
-    { name: "spanish", entries: [{ hashtag: "musica" }] },
+
     {
       name: "us politics",
       entries: [
-        { hashtag: "biden" },
-        { hashtag: "mccarthy" },
-        { hashtag: "trump" },
+        { type: "hashtag", name: "biden" },
+        { type: "hashtag", name: "mccarthy" },
+        { type: "hashtag", name: "trump" },
       ],
+      type: "topic",
     },
     {
       name: "software",
       entries: [
-        { hashtag: "javascript" },
-        { hashtag: "css" },
-        { hashtag: "python" },
-        { hashtag: "rust" },
-        { hashtag: "ml" },
-        { hashtag: "accessibility" },
+        { type: "hashtag", name: "javascript" },
+        { type: "hashtag", name: "css" },
+        { type: "hashtag", name: "python" },
+        { type: "hashtag", name: "rust" },
+        { type: "hashtag", name: "ml" },
+        { type: "hashtag", name: "accessibility" },
       ],
+      type: "topic",
     },
     {
       name: "science",
       entries: [
-        { hashtag: "physics" },
-        { hashtag: "history" },
-        { hashtag: "climatechange" },
-        { hashtag: "openaccess" },
-        { hashtag: "dataviz" },
+        { type: "hashtag", name: "physics" },
+        { type: "hashtag", name: "history" },
+        { type: "hashtag", name: "climatechange" },
+        { type: "hashtag", name: "openaccess" },
+        { type: "hashtag", name: "dataviz" },
       ],
+      type: "topic",
     },
     {
       name: "sport",
       entries: [
-        { hashtag: "arsenal" },
-        { hashtag: "football" },
-        { hashtag: "baseball" },
-        { hashtag: "nfl" },
+        { type: "hashtag", name: "arsenal" },
+        { type: "hashtag", name: "football" },
+        { type: "hashtag", name: "baseball" },
+        { type: "hashtag", name: "nfl" },
       ],
+      type: "topic",
     },
     {
       name: "other",
-      entries: [{ hashtag: "hashtaggames" }, { hashtag: "ttrpg" }],
+      entries: [
+        { type: "hashtag", name: "hashtaggames" },
+        { type: "hashtag", name: "ttrpg" },
+      ],
+      type: "topic",
     },
     {
       name: "questionable",
-      notcheckable: true,
+      icon: <Report />,
       entries: [
-        { hashtag: "nsfw" },
-        { hashtag: "nude" },
-        { hashtag: "twitter" },
+        { type: "hashtag", name: "nsfw" },
+        { type: "hashtag", name: "nude" },
+        { type: "hashtag", name: "twitter" },
       ],
+      type: "group",
     },
   ];
 

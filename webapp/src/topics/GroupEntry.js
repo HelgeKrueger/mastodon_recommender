@@ -13,39 +13,9 @@ import React, { useEffect, useState } from "react";
 import Entry from "./Entry";
 import HashtagEntry from "./HashtagEntry";
 
-const TopicEntry = ({ data, selected, dispatch }) => {
+const GroupEntry = ({ data, selected, dispatch }) => {
   const [open, setOpen] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const [inderminate, setInderminate] = useState(false);
   const entries = data.entries;
-
-  useEffect(() => {
-    if (selected) {
-      const value = data.entries.every((entry) => selected?.[entry.name]);
-
-      if (!value) {
-        if (data.entries.some((entry) => selected?.[entry.name])) {
-          setInderminate(true);
-        } else {
-          setInderminate(false);
-        }
-      }
-
-      if (value) {
-        setInderminate(false);
-      }
-
-      setChecked(value ? true : false);
-    }
-  }, [selected]);
-
-  const handleClick = () => {
-    dispatch({
-      action: "setTopic",
-      values: data.entries.map((entry) => entry.name),
-      selected: !checked,
-    });
-  };
 
   return (
     <>
@@ -64,17 +34,8 @@ const TopicEntry = ({ data, selected, dispatch }) => {
           </>
         }
       >
-        <ListItemButton dense onClick={handleClick}>
-          <ListItemIcon>
-            <Checkbox
-              edge="start"
-              checked={checked}
-              tabIndex={-1}
-              disableRipple
-              disabled={data?.notcheckable}
-              indeterminate={inderminate}
-            />
-          </ListItemIcon>
+        <ListItemButton dense>
+          <ListItemIcon>{data?.icon}</ListItemIcon>
           <ListItemText primary={data.name} />
         </ListItemButton>
       </ListItem>
@@ -94,4 +55,4 @@ const TopicEntry = ({ data, selected, dispatch }) => {
   );
 };
 
-export default TopicEntry;
+export default GroupEntry;

@@ -1,7 +1,7 @@
 import { ExpandLess, ExpandMore, Info } from "@mui/icons-material";
 import { List, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
-import TopicEntry from "./topics/TopicEntry";
+import Entry from "./topics/Entry";
 
 const TopicChoice = ({ selected, dispatch, topicData }) => {
   return (
@@ -9,7 +9,7 @@ const TopicChoice = ({ selected, dispatch, topicData }) => {
       <Typography variant="h5">Select Topics</Typography>
       <List dense>
         {topicData.map((entry) => (
-          <TopicEntry
+          <Entry
             data={entry}
             key={entry.name}
             selected={selected}

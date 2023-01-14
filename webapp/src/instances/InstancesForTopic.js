@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { createDisplayData } from "../compute/displayData";
 import SingleInstance from "./SingleInstance";
 
 const scoreInstance = (values, hashtags) => {
@@ -38,23 +39,7 @@ const InstancesForTopic = ({ data, topics, information, topicData }) => {
   }, [topics]);
 
   useEffect(() => {
-    let toDisplay = {};
-    const baseData = data[displayed];
-
-    for (let entry of topicData) {
-      if (entry.entries.some((x) => topics.indexOf(x.hashtag) > -1)) {
-        for (let item of entry.entries) {
-          toDisplay["#" + item.hashtag] = baseData[item.hashtag];
-        }
-      } else {
-        toDisplay[entry.name] =
-          entry.entries
-            .map((x) => baseData?.[x.hashtag])
-            .reduce((acc, x) => acc + x, 0) / entry.entries.length;
-      }
-    }
-
-    setDataToDisplay(toDisplay);
+    setDataToDisplay(createDisplayData(data[displayed], topics, topicData));
   }, [displayed]);
 
   return (
@@ -63,8 +48,10 @@ const InstancesForTopic = ({ data, topics, information, topicData }) => {
         <Paper elevation={5} sx={{ padding: 1, margin: 1 }}>
           <Table size="small">
             <TableHead>
-              <TableRow sx={{ height: "150px" }}>
-                <TableCell>Name</TableCell>
+              <TableRow>
+                <TableCell>
+                  <b>Name</b>
+                </TableCell>
                 {/* {topics.map((name) => (
                   <TableCell
                     sx={{
