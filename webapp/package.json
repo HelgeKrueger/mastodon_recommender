@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "esbuild index.js  --loader:.js=jsx --bundle --outdir=build --watch",
+    "watch": "esbuild index.js  --loader:.js=jsx --bundle --outdir=build --watch --servedir=build",
     "build": "esbuild index.js  --loader:.js=jsx --bundle --outdir=dist --minify"
   },
   "author": "Helge Krueger",
@@ -18,7 +18,7 @@
     "@mui/lab": "^5.0.0-alpha.114",
     "@mui/material": "^5.11.3",
     "d3": "^7.8.0",
-    "esbuild": "^0.16.15",
+    "esbuild": "^0.17.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

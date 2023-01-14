@@ -12,13 +12,4 @@ This thing is build with React.js, d3.js, and the MUI components.
 npm run watch
 ```
 
-creates an esbuild watcher for changes.
-
-The webapp can be viewed on localhost by starting any webserver in the build directory, e.g.
-
-```
-cd build
-python -mhttp.server
-```
-
-The webgui should then be available at `http://localhost:8000/`.
+creates an esbuild watcher for changes. The webgui should then be available at `http://localhost:8000/`. The GUI automatically reloads, when esbuild detects changes.
