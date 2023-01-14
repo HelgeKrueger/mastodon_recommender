@@ -107,6 +107,7 @@ const InstancesForTopic = ({ data, topics, information, topicData }) => {
             info={information?.[displayed]}
             key={displayed}
             data={dataToDisplay}
+            rawData={data?.[displayed]}
             includeLinks
           />
         </Paper>
