@@ -8,16 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import React from "react";
-
-const TooltipText = ({ entry }) => {
-  return (
-    <>
-      Information from <b>{entry.number_of_urls} status posts</b>
-      <br />
-      made from {entry.number_of_domains} different instances
-    </>
-  );
-};
+import TooltipText from "./TooltipText";
 
 const HashtagEntry = ({ entry, selected, dispatch }) => {
   return (
